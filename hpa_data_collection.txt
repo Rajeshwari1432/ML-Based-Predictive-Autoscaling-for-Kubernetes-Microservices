@@ -1,0 +1,51 @@
+# HPA Data Collection Guide (Minikube + Docker)
+
+## Requirements
+- Docker Desktop
+- Minikube
+- kubectl
+- Helm
+- Prometheus (via Helm)
+- Load generator (hey or ab)
+
+## Setup Steps
+1. Install Docker, Minikube, kubectl, Helm (see official install links).
+2. Start Minikube:
+   minikube start --driver=docker
+3. Deploy nginx workload:
+   kubectl create deployment demo --image=nginx
+   kubectl expose deployment demo --port=80 --type=NodePort
+4. Set resource requests:
+   kubectl set resources deployment demo --requests=cpu=100m,memory=128Mi
+5. Enable HPA:
+   kubectl autoscale deployment demo --cpu-percent=50 --min=1 --max=10
+6. Install Prometheus:
+   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+   helm repo update
+   helm install prometheus prometheus-community/prometheus
+7. Wait for Prometheus:
+   kubectl wait --for=condition=Ready pod -l app=prometheus,component=server --timeout=180s
+8. Get nginx URL:
+   minikube service demo --url
+9. Generate load:
+   Download hey from https://github.com/rakyll/hey/releases and run
+   hey -n 10000 -c 50 <nginx_url>
+10. Open Prometheus UI:
+    minikube service prometheus --url
+11. Export metrics using Prometheus queries:
+    - Replica count: kube_deployment_status_replicas{deployment="demo"}
+    - CPU usage: container_cpu_usage_seconds_total
+    - Memory usage: container_memory_working_set_bytes
+    - Export as CSV for analysis.
+
+## Notes
+- All tools must be installed and available in your PATH.
+- Run PowerShell as Administrator for installations.
+- For publication, document your cluster version, node specs, and experiment duration.
+
+## References
+- [Minikube Install Guide](https://minikube.sigs.k8s.io/docs/start/)
+- [kubectl Install Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+- [Helm Install Guide](https://helm.sh/docs/intro/install/)
+- [hey Load Generator](https://github.com/rakyll/hey/releases)
+- [Prometheus Helm Chart](https://github.com/prometheus-community/helm-charts)
