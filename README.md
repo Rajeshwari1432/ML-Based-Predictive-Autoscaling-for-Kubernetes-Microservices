@@ -11,7 +11,7 @@ This project implements a **predictive autoscaler** using machine learning (ML) 
 - Predictive autoscaling aims to forecast future CPU/memory demand and scale proactively, improving tail-latency and resource efficiency compared to HPA.
 
 # Objectives
-- Build ML models (LSTM/GRU, XGBoost, optional hybrid) to predict CPU/memory usage (30–120s horizons).
+- Build ML models (LSTM/GRU, XGBoost and hybrid) to predict CPU/memory usage (30–120s horizons).
 - Implement a predictive autoscaler (controller/operator + inference service).
 - Evaluate vs HPA baseline on DeathStarBench under varied loads, reporting p95/p99 latency, SLA violation %, resource waste, scaling oscillations, and autoscaler overhead.
 
