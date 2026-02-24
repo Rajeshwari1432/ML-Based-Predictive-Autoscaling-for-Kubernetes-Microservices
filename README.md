@@ -1,5 +1,6 @@
 # ML-Based Predictive Autoscaling for Kubernetes Microservices
 
+
 # Introduction
 Kubernetes Horizontal Pod Autoscaler (HPA) is the default mechanism for scaling microservices based on resource usage (CPU, memory). HPA is reactive—it scales only after load increases, which can lead to temporary SLA violations and inefficient resource usage.
 
